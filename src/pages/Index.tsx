@@ -43,8 +43,9 @@ const Index = () => {
             <VinLookup onSubmit={handleVinSubmit} />
             
             {loading && (
-              <div className="flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center space-y-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-gray-600">Fetching KBB valuation...</p>
               </div>
             )}
             
