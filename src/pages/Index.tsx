@@ -4,6 +4,7 @@ import { VehicleInfo } from "@/components/VehicleInfo";
 import { RecentLookups } from "@/components/RecentLookups";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getVehicleValuation } from "@/lib/kbb-api";
 
 interface RecentLookup {
   vin: string;
@@ -41,22 +42,7 @@ const Index = () => {
     setVehicleData(null);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const data = {
-        make: "Toyota",
-        model: "Camry",
-        year: 2020,
-        trim: "SE",
-        estimatedValue: 22500,
-        tradeInValue: 20000,
-        retailValue: 24500,
-        cpoValue: 26000,
-      };
-
-      if (!data.make || !data.model || !data.year || !data.estimatedValue) {
-        throw new Error("The vehicle information is incomplete. Please try a different VIN.");
-      }
-
+      const data = await getVehicleValuation(vin);
       setVehicleData(data);
       addToRecentLookups(vin, data);
     } catch (error) {
