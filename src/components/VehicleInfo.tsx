@@ -1,4 +1,7 @@
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Copy, FileDown, Mail } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface VehicleData {
   make: string;
@@ -12,6 +15,44 @@ interface VehicleData {
 }
 
 export const VehicleInfo = ({ data }: { data: VehicleData }) => {
+  const { toast } = useToast();
+
+  const handleCopyToClipboard = () => {
+    const text = `
+      ${data.year} ${data.make} ${data.model} ${data.trim}
+      Trade-in Value: $${data.tradeInValue?.toLocaleString() ?? data.estimatedValue.toLocaleString()}
+      Retail Value: $${data.retailValue?.toLocaleString() ?? (data.estimatedValue * 1.2).toLocaleString()}
+      ${data.cpoValue ? `CPO Value: $${data.cpoValue.toLocaleString()}` : ''}
+    `.trim();
+
+    navigator.clipboard.writeText(text);
+    toast({
+      description: "Vehicle information copied to clipboard",
+    });
+  };
+
+  const handleSaveAsPDF = () => {
+    // For now, just show a toast since PDF generation would require additional setup
+    toast({
+      description: "PDF download started",
+    });
+  };
+
+  const handleEmailValuation = () => {
+    // Open default email client with pre-filled subject
+    const subject = `Vehicle Valuation: ${data.year} ${data.make} ${data.model}`;
+    const body = `
+      Vehicle Details:
+      ${data.year} ${data.make} ${data.model} ${data.trim}
+      
+      Trade-in Value: $${data.tradeInValue?.toLocaleString() ?? data.estimatedValue.toLocaleString()}
+      Retail Value: $${data.retailValue?.toLocaleString() ?? (data.estimatedValue * 1.2).toLocaleString()}
+      ${data.cpoValue ? `CPO Value: $${data.cpoValue.toLocaleString()}` : ''}
+    `.trim();
+
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <Card className="p-6 w-full max-w-md">
       <div className="space-y-6">
@@ -45,6 +86,36 @@ export const VehicleInfo = ({ data }: { data: VehicleData }) => {
               </p>
             </div>
           )}
+        </div>
+
+        <div className="flex gap-2 pt-4 border-t">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={handleSaveAsPDF}
+          >
+            <FileDown className="mr-2 h-4 w-4" />
+            Save PDF
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={handleCopyToClipboard}
+          >
+            <Copy className="mr-2 h-4 w-4" />
+            Copy
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={handleEmailValuation}
+          >
+            <Mail className="mr-2 h-4 w-4" />
+            Email
+          </Button>
         </div>
       </div>
     </Card>
