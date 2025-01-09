@@ -2,17 +2,22 @@ import { useState } from "react";
 import { VinLookup } from "@/components/VinLookup";
 import { VehicleInfo } from "@/components/VehicleInfo";
 import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Index = () => {
   const [loading, setLoading] = useState(false);
   const [vehicleData, setVehicleData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleVinSubmit = async (vin: string) => {
     setLoading(true);
+    setError(null);
+    setVehicleData(null);
+
     // Simulated API call - replace with actual KBB API integration
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      setVehicleData({
+      const data = {
         make: "Toyota",
         model: "Camry",
         year: 2020,
@@ -21,9 +26,24 @@ const Index = () => {
         tradeInValue: 20000,
         retailValue: 24500,
         cpoValue: 26000,
-      });
+      };
+
+      // Simulate validation of required fields
+      if (!data.make || !data.model || !data.year || !data.estimatedValue) {
+        throw new Error("The vehicle information is incomplete. Please try a different VIN.");
+      }
+
+      setVehicleData(data);
     } catch (error) {
-      console.error("Error fetching vehicle data:", error);
+      let errorMessage = "An unexpected error occurred while fetching vehicle data.";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (!window.navigator.onLine) {
+        errorMessage = "Unable to connect to the server. Please check your internet connection and try again.";
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -44,6 +64,12 @@ const Index = () => {
 
           <div className="flex flex-col items-center space-y-8">
             <VinLookup onSubmit={handleVinSubmit} />
+            
+            {error && (
+              <Alert variant="destructive" className="w-full max-w-md">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             
             {loading && (
               <div className="flex flex-col items-center justify-center space-y-4">
