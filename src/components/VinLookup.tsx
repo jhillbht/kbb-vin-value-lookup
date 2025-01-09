@@ -34,7 +34,7 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         />
       </div>
       <Button type="submit" className="w-full">
-        Look Up Vehicle
+        Get Value
       </Button>
     </form>
   );
