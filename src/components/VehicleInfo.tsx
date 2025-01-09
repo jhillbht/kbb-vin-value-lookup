@@ -54,66 +54,66 @@ export const VehicleInfo = ({ data }: { data: VehicleData }) => {
   };
 
   return (
-    <Card className="p-6 w-full max-w-md">
-      <div className="space-y-6">
+    <Card className="p-4 sm:p-6 w-full max-w-md">
+      <div className="space-y-4 sm:space-y-6">
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl sm:text-2xl font-bold">
             {data.year} {data.make} {data.model}
           </h2>
-          <p className="text-gray-500">{data.trim}</p>
+          <p className="text-sm sm:text-base text-gray-500">{data.trim}</p>
         </div>
         
-        <div className="grid gap-4">
-          <div className="p-4 rounded-lg bg-green-50">
+        <div className="grid gap-3 sm:gap-4">
+          <div className="p-3 sm:p-4 rounded-lg bg-green-50">
             <p className="text-sm font-medium text-green-800">Trade-in Value</p>
-            <p className="text-2xl font-bold text-green-700">
+            <p className="text-xl sm:text-2xl font-bold text-green-700">
               ${data.tradeInValue?.toLocaleString() ?? data.estimatedValue.toLocaleString()}
             </p>
           </div>
 
-          <div className="p-4 rounded-lg bg-blue-50">
+          <div className="p-3 sm:p-4 rounded-lg bg-blue-50">
             <p className="text-sm font-medium text-blue-800">Retail Value</p>
-            <p className="text-2xl font-bold text-blue-700">
+            <p className="text-xl sm:text-2xl font-bold text-blue-700">
               ${data.retailValue?.toLocaleString() ?? (data.estimatedValue * 1.2).toLocaleString()}
             </p>
           </div>
 
           {data.cpoValue && (
-            <div className="p-4 rounded-lg bg-purple-50">
+            <div className="p-3 sm:p-4 rounded-lg bg-purple-50">
               <p className="text-sm font-medium text-purple-800">Certified Pre-Owned Value</p>
-              <p className="text-2xl font-bold text-purple-700">
+              <p className="text-xl sm:text-2xl font-bold text-purple-700">
                 ${data.cpoValue.toLocaleString()}
               </p>
             </div>
           )}
         </div>
 
-        <div className="flex gap-2 pt-4 border-t">
+        <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
           <Button
             variant="outline"
-            size="sm"
-            className="flex-1"
+            size="lg"
+            className="flex-1 h-12 sm:h-10"
             onClick={handleSaveAsPDF}
           >
-            <FileDown className="mr-2 h-4 w-4" />
+            <FileDown className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
             Save PDF
           </Button>
           <Button
             variant="outline"
-            size="sm"
-            className="flex-1"
+            size="lg"
+            className="flex-1 h-12 sm:h-10"
             onClick={handleCopyToClipboard}
           >
-            <Copy className="mr-2 h-4 w-4" />
+            <Copy className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
             Copy
           </Button>
           <Button
             variant="outline"
-            size="sm"
-            className="flex-1"
+            size="lg"
+            className="flex-1 h-12 sm:h-10"
             onClick={handleEmailValuation}
           >
-            <Mail className="mr-2 h-4 w-4" />
+            <Mail className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
             Email
           </Button>
         </div>

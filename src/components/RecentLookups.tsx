@@ -24,15 +24,15 @@ export const RecentLookups = ({ lookups, onLookupClick }: RecentLookupsProps) =>
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Recent Lookups</CardTitle>
+        <CardTitle className="text-base sm:text-lg font-semibold">Recent Lookups</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 sm:space-y-4">
         {lookups.map((lookup, index) => (
           <div
             key={index}
-            className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors"
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors gap-2"
           >
             <div className="space-y-1">
               <div className="text-sm font-medium">
@@ -45,6 +45,7 @@ export const RecentLookups = ({ lookups, onLookupClick }: RecentLookupsProps) =>
             <Button
               variant="ghost"
               size="sm"
+              className="w-full sm:w-auto h-10"
               onClick={() => onLookupClick(lookup.vin)}
             >
               Look Up Again

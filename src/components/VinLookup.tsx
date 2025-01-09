@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "sonner";
 
 export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => {
   const [vin, setVin] = useState("");
@@ -12,7 +11,6 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
     e.preventDefault();
     setVinError(null);
     
-    // Basic VIN validation (17 characters, alphanumeric)
     if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(vin)) {
       setVinError("Please enter a valid 17-character VIN. VINs can only contain letters (except I, O, Q) and numbers.");
       return;
@@ -22,9 +20,9 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto">
       <div className="space-y-2">
-        <label htmlFor="vin" className="text-sm font-medium text-gray-700">
+        <label htmlFor="vin" className="text-sm sm:text-base font-medium text-gray-700">
           Vehicle Identification Number (VIN)
         </label>
         <Input
@@ -35,7 +33,7 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
             setVin(e.target.value.toUpperCase());
             setVinError(null);
           }}
-          className="font-mono"
+          className="font-mono h-12 sm:h-10 text-base sm:text-sm"
           maxLength={17}
         />
       </div>
@@ -46,7 +44,7 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         </Alert>
       )}
 
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full h-12 sm:h-10 text-base sm:text-sm">
         Get Value
       </Button>
     </form>

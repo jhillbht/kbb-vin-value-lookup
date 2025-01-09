@@ -62,23 +62,23 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-2 mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+          <div className="text-center space-y-2 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               KBB Valuation Lookup
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Enter a VIN to get the latest Kelley Blue Book valuation
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-8">
               <VinLookup onSubmit={handleVinSubmit} />
               
               {error && (
-                <Alert variant="destructive" className="w-full max-w-md">
+                <Alert variant="destructive" className="w-full max-w-md mx-auto">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
@@ -90,7 +90,11 @@ const Index = () => {
                 </div>
               )}
               
-              {!loading && vehicleData && <VehicleInfo data={vehicleData} />}
+              {!loading && vehicleData && (
+                <div className="flex justify-center">
+                  <VehicleInfo data={vehicleData} />
+                </div>
+              )}
             </div>
 
             <div className="lg:col-span-1">
