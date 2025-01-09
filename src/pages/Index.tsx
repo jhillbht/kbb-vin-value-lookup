@@ -18,6 +18,9 @@ const Index = () => {
         year: 2020,
         trim: "SE",
         estimatedValue: 22500,
+        tradeInValue: 20000,
+        retailValue: 24500,
+        cpoValue: 26000,
       });
     } catch (error) {
       console.error("Error fetching vehicle data:", error);
