@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
+import { CarFront } from "lucide-react";
 
 interface VehicleInfoProps {
   data: {
@@ -15,19 +16,6 @@ interface VehicleInfoProps {
     vin?: string;
   };
 }
-
-const getVehicleImage = (model: string): string => {
-  if (model.toLowerCase().includes('model s')) {
-    return '/model-s.png';
-  } else if (model.toLowerCase().includes('model 3')) {
-    return '/model-3.png';  // Now using the new vector image
-  } else if (model.toLowerCase().includes('model x')) {
-    return '/model-x.png';
-  } else if (model.toLowerCase().includes('model y')) {
-    return '/model-y.png';
-  }
-  return '/model-3.png'; // Default fallback to the new vector image
-};
 
 export const VehicleInfo = ({ data }: VehicleInfoProps) => {
   const { toast } = useToast();
@@ -74,12 +62,8 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
       <Card className="bg-secondary/50 backdrop-blur-sm border-0">
         <CardHeader>
           <div className="flex items-center gap-4">
-            <div className="w-64 h-40 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
-              <img
-                src={getVehicleImage(data.model)}
-                alt={`${data.year} ${data.make} ${data.model}`}
-                className="w-full h-full object-contain"
-              />
+            <div className="w-64 h-40 bg-muted rounded-lg flex items-center justify-center">
+              <CarFront className="w-40 h-40 text-primary" strokeWidth={1.5} />
             </div>
             <div className="flex-1">
               <CardTitle className="text-xl font-semibold mb-1">
