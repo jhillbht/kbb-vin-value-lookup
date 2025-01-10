@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Camera } from "lucide-react";
 
 export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => {
   const [vin, setVin] = useState("");
@@ -26,17 +27,31 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
           <label htmlFor="vin" className="block text-sm sm:text-base font-medium text-center">
             Vehicle Identification Number (VIN)
           </label>
-          <Input
-            id="vin"
-            placeholder="Enter 17-character VIN"
-            value={vin}
-            onChange={(e) => {
-              setVin(e.target.value.toUpperCase());
-              setVinError(null);
-            }}
-            className="font-mono h-12 sm:h-10 text-base sm:text-sm text-center"
-            maxLength={17}
-          />
+          <div className="relative">
+            <Input
+              id="vin"
+              placeholder="Enter 17-character VIN"
+              value={vin}
+              onChange={(e) => {
+                setVin(e.target.value.toUpperCase());
+                setVinError(null);
+              }}
+              className="font-mono h-12 sm:h-10 text-base sm:text-sm text-center pr-12"
+              maxLength={17}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 hover:bg-transparent"
+              onClick={() => {
+                // Camera functionality will be implemented here
+                console.log("Camera button clicked");
+              }}
+            >
+              <Camera className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </div>
         </div>
         
         {vinError && (
