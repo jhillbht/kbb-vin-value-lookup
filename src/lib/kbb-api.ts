@@ -1,33 +1,31 @@
 // Mock data to simulate different vehicle responses
 const mockVehicles = [
   {
-    make: "Toyota",
-    model: "Camry",
-    year: 2020,
-    trim: "SE",
-    estimatedValue: 22500,
-    tradeInValue: 20000,
-    retailValue: 24500,
-    cpoValue: 23000
+    make: "Tesla",
+    model: "Model 3",
+    year: 2023,
+    trim: "Long Range",
+    estimatedValue: 45500,
+    tradeInValue: 42000,
+    retailValue: 47500,
   },
   {
-    make: "Honda",
-    model: "Civic",
-    year: 2019,
-    trim: "EX",
-    estimatedValue: 19800,
-    tradeInValue: 17500,
-    retailValue: 21500,
+    make: "Tesla",
+    model: "Model Y",
+    year: 2023,
+    trim: "Performance",
+    estimatedValue: 55800,
+    tradeInValue: 52500,
+    retailValue: 58500,
   },
   {
-    make: "Ford",
-    model: "F-150",
-    year: 2021,
-    trim: "XLT",
-    estimatedValue: 35000,
-    tradeInValue: 32000,
-    retailValue: 37500,
-    cpoValue: 35500
+    make: "Tesla",
+    model: "Model S",
+    year: 2023,
+    trim: "Plaid",
+    estimatedValue: 105000,
+    tradeInValue: 98000,
+    retailValue: 109500,
   }
 ];
 
@@ -53,9 +51,9 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // Helper function to get consistent mock data based on VIN
 const getMockIndexFromVin = (vin: string): number => {
   // Use specific VINs for consistent data
-  if (vin === "1HGCM82633A123456") return 0; // Toyota Camry
-  if (vin === "5FNRL6H58NB123789") return 1; // Honda Civic
-  if (vin === "1FTEW1EG5NK987654") return 2; // Ford F-150
+  if (vin === "5YJ3E1EA1PF123456") return 0; // Tesla Model 3
+  if (vin === "7SAYGDEF9PF789012") return 1; // Tesla Model Y
+  if (vin === "5YJSA1E47PF456789") return 2; // Tesla Model S
   
   // For other VINs, use the original hash method
   return vin.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % mockVehicles.length;
