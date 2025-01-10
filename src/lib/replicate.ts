@@ -1,9 +1,9 @@
 import { toast } from "@/hooks/use-toast";
 
 const REPLICATE_API_KEY = "r8_TgDOuItziSv8IOM9sQk6rLHMZGoPxyJ3hOXcO";
-const BASE_URL = import.meta.env.PROD 
-  ? "https://api.replicate.com/v1/predictions"
-  : "/api/replicate/predictions";
+
+// Always use the proxy URL to handle CORS in both environments
+const BASE_URL = "/api/replicate/predictions";
 
 export interface GenerationResponse {
   id: string;
@@ -63,10 +63,8 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
 export const checkGenerationStatus = async (
   url: string
 ): Promise<GenerationResponse> => {
-  // In production, use the original URL, in development use the proxy
-  const checkUrl = import.meta.env.PROD 
-    ? url 
-    : url.replace('https://api.replicate.com/v1', '/api/replicate');
+  // Always use the proxy URL
+  const checkUrl = url.replace('https://api.replicate.com/v1', '/api/replicate');
 
   try {
     console.log("Checking generation status at URL:", checkUrl);
