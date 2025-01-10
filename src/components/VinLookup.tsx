@@ -3,10 +3,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Camera } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useZxing } from "react-zxing";
 
 export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => {
   const [vin, setVin] = useState("");
   const [vinError, setVinError] = useState<string | null>(null);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+
+  const { ref } = useZxing({
+    onDecodeResult(result) {
+      const scannedVin = result.getText();
+      setVin(scannedVin.toUpperCase());
+      setIsScannerOpen(false);
+    },
+    onError(error) {
+      console.error("Scanner error:", error);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,36 +36,33 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
+      <Button
+        type="button"
+        variant="outline"
+        size="lg"
+        className="mb-6 w-full max-w-[200px]"
+        onClick={() => setIsScannerOpen(true)}
+      >
+        <Camera className="mr-2 h-5 w-5" />
+        Scan VIN
+      </Button>
+
       <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
         <div className="space-y-3">
           <label htmlFor="vin" className="block text-sm sm:text-base font-medium text-center">
             Vehicle Identification Number (VIN)
           </label>
-          <div className="relative">
-            <Input
-              id="vin"
-              placeholder="Enter 17-character VIN"
-              value={vin}
-              onChange={(e) => {
-                setVin(e.target.value.toUpperCase());
-                setVinError(null);
-              }}
-              className="font-mono h-12 sm:h-10 text-base sm:text-sm text-center pr-12"
-              maxLength={17}
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 hover:bg-transparent"
-              onClick={() => {
-                // Camera functionality will be implemented here
-                console.log("Camera button clicked");
-              }}
-            >
-              <Camera className="h-5 w-5 text-muted-foreground" />
-            </Button>
-          </div>
+          <Input
+            id="vin"
+            placeholder="Enter 17-character VIN"
+            value={vin}
+            onChange={(e) => {
+              setVin(e.target.value.toUpperCase());
+              setVinError(null);
+            }}
+            className="font-mono h-12 sm:h-10 text-base sm:text-sm text-center"
+            maxLength={17}
+          />
         </div>
         
         {vinError && (
@@ -64,6 +75,17 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
           Get Value
         </Button>
       </form>
+
+      <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Scan VIN Barcode</DialogTitle>
+          </DialogHeader>
+          <div className="aspect-video w-full overflow-hidden rounded-lg">
+            <video ref={ref} className="w-full h-full object-cover" />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
