@@ -58,9 +58,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
-        <div className="w-full max-w-7xl">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-xl">
           <div className="text-center space-y-4 mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold gradient-text">
               Vehicle Value Lookup
@@ -70,39 +70,35 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <div className="glass-card p-6 rounded-lg">
-                <VinLookup onSubmit={handleVinSubmit} />
-              </div>
-              
-              {error && (
-                <Alert variant="destructive" className="glass-card border-destructive/20">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              
-              {loading && (
-                <div className="flex flex-col items-center justify-center p-12 glass-card rounded-lg space-y-4">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-muted-foreground">Fetching valuation data...</p>
-                </div>
-              )}
-              
-              {!loading && vehicleData && (
-                <div className="glass-card rounded-lg">
-                  <VehicleInfo data={vehicleData} />
-                </div>
-              )}
+          <div className="space-y-6">
+            <div className="glass-card p-6 rounded-lg">
+              <VinLookup onSubmit={handleVinSubmit} />
             </div>
-
-            <div className="lg:col-span-1">
-              <div className="glass-card rounded-lg">
-                <RecentLookups
-                  lookups={recentLookups}
-                  onLookupClick={handleVinSubmit}
-                />
+            
+            {error && (
+              <Alert variant="destructive" className="glass-card border-destructive/20">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            {loading && (
+              <div className="flex flex-col items-center justify-center p-12 glass-card rounded-lg space-y-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-muted-foreground">Fetching valuation data...</p>
               </div>
+            )}
+            
+            {!loading && vehicleData && (
+              <div className="glass-card rounded-lg">
+                <VehicleInfo data={vehicleData} />
+              </div>
+            )}
+
+            <div className="glass-card rounded-lg">
+              <RecentLookups
+                lookups={recentLookups}
+                onLookupClick={handleVinSubmit}
+              />
             </div>
           </div>
         </div>
