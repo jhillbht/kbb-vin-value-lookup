@@ -17,19 +17,16 @@ interface VehicleInfoProps {
     retailValue: number;
     vin?: string;
   };
-  apiKey: string;
 }
 
-export const VehicleInfo = ({ data, apiKey }: VehicleInfoProps) => {
+export const VehicleInfo = ({ data }: VehicleInfoProps) => {
   const { toast } = useToast();
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    if (apiKey) {
-      generateImage();
-    }
-  }, [data, apiKey]);
+    generateImage();
+  }, [data]);
 
   const handleSavePDF = () => {
     console.log(`Generating PDF for ${data.year} ${data.make} ${data.model}`);
@@ -69,24 +66,15 @@ export const VehicleInfo = ({ data, apiKey }: VehicleInfoProps) => {
   };
 
   const generateImage = async () => {
-    if (!apiKey) {
-      toast({
-        title: "API Key Required",
-        description: "Please enter your Replicate API key to generate images.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsGenerating(true);
     try {
       const prompt = `${data.year} ${data.make} ${data.model} ${data.trim}`;
-      const response = await generateVehicleImage(prompt, apiKey);
+      const response = await generateVehicleImage(prompt);
       
       // Poll for results
       const pollInterval = setInterval(async () => {
         try {
-          const result = await checkGenerationStatus(response.urls.get, apiKey);
+          const result = await checkGenerationStatus(response.urls.get);
           
           if (result.status === "succeeded" && result.output) {
             setGeneratedImage(result.output[0]);

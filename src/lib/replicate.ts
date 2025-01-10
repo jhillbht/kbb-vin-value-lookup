@@ -1,6 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 
 const REPLICATE_API_URL = "/api/replicate/predictions";
+const REPLICATE_API_KEY = "r8_TgDOuItziSv8IOM9sQk6rLHMZGoPxyJ3hOXcO";
 
 export interface GenerationResponse {
   id: string;
@@ -13,14 +14,14 @@ export interface GenerationResponse {
   error?: string;
 }
 
-export const generateVehicleImage = async (prompt: string, apiKey: string): Promise<GenerationResponse> => {
+export const generateVehicleImage = async (prompt: string): Promise<GenerationResponse> => {
   try {
     console.log("Generating image with prompt:", prompt);
     const response = await fetch(REPLICATE_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Token ${apiKey}`,
+        "Authorization": `Token ${REPLICATE_API_KEY}`,
       },
       body: JSON.stringify({
         version: "39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
@@ -52,8 +53,7 @@ export const generateVehicleImage = async (prompt: string, apiKey: string): Prom
 };
 
 export const checkGenerationStatus = async (
-  url: string,
-  apiKey: string
+  url: string
 ): Promise<GenerationResponse> => {
   const proxyUrl = url.replace('https://api.replicate.com/v1', '/api/replicate');
 
@@ -61,7 +61,7 @@ export const checkGenerationStatus = async (
     console.log("Checking generation status at URL:", proxyUrl);
     const response = await fetch(proxyUrl, {
       headers: {
-        "Authorization": `Token ${apiKey}`,
+        "Authorization": `Token ${REPLICATE_API_KEY}`,
         "Content-Type": "application/json",
       },
     });
