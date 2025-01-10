@@ -20,10 +20,10 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[200px] w-full">
-      <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto px-4">
-        <div className="space-y-2">
-          <label htmlFor="vin" className="block text-sm sm:text-base font-medium">
+    <div className="flex items-center justify-center min-h-[calc(100vh-16rem)] w-full">
+      <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md mx-auto px-4">
+        <div className="space-y-3">
+          <label htmlFor="vin" className="block text-sm sm:text-base font-medium text-center">
             Vehicle Identification Number (VIN)
           </label>
           <Input
@@ -34,7 +34,7 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
               setVin(e.target.value.toUpperCase());
               setVinError(null);
             }}
-            className="font-mono h-12 sm:h-10 text-base sm:text-sm"
+            className="font-mono h-12 sm:h-10 text-base sm:text-sm text-center"
             maxLength={17}
           />
         </div>
