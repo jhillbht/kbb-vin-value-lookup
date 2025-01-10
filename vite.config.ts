@@ -14,7 +14,10 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/replicate/, ''),
         headers: {
-          'Origin': 'https://api.replicate.com'
+          'Origin': 'https://api.replicate.com',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
         },
       },
     },

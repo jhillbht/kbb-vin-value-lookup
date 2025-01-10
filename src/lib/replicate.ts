@@ -24,6 +24,7 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Token ${REPLICATE_API_KEY}`,
+        "Accept": "application/json",
       },
       body: JSON.stringify({
         version: "39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
@@ -36,6 +37,12 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
         },
       }),
     });
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("Invalid content type received:", contentType);
+      throw new Error("Invalid response format from server");
+    }
 
     const data = await response.json();
     
@@ -72,8 +79,15 @@ export const checkGenerationStatus = async (
       headers: {
         "Authorization": `Token ${REPLICATE_API_KEY}`,
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
     });
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("Invalid content type received:", contentType);
+      throw new Error("Invalid response format from server");
+    }
 
     if (!response.ok) {
       const errorData = await response.json();
