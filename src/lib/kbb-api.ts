@@ -1,3 +1,36 @@
+// Mock data to simulate different vehicle responses
+const mockVehicles = [
+  {
+    make: "Toyota",
+    model: "Camry",
+    year: 2020,
+    trim: "SE",
+    estimatedValue: 22500,
+    tradeInValue: 20000,
+    retailValue: 24500,
+    cpoValue: 23000
+  },
+  {
+    make: "Honda",
+    model: "Civic",
+    year: 2019,
+    trim: "EX",
+    estimatedValue: 19800,
+    tradeInValue: 17500,
+    retailValue: 21500,
+  },
+  {
+    make: "Ford",
+    model: "F-150",
+    year: 2021,
+    trim: "XLT",
+    estimatedValue: 35000,
+    tradeInValue: 32000,
+    retailValue: 37500,
+    cpoValue: 35500
+  }
+];
+
 interface ValuationResponse {
   make: string;
   model: string;
@@ -9,35 +42,35 @@ interface ValuationResponse {
   cpoValue?: number;
 }
 
+// Helper function to validate VIN format
+const isValidVin = (vin: string): boolean => {
+  return /^[A-HJ-NPR-Z0-9]{17}$/i.test(vin);
+};
+
+// Simulate network delay
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export async function getVehicleValuation(vin: string): Promise<ValuationResponse> {
-  const response = await fetch('/api/valuation/vin', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.KBB_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ vin }),
-  });
+  // Simulate API delay (between 500ms and 1.5s)
+  await delay(Math.random() * 1000 + 500);
 
-  if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error('Invalid API key. Please check your KBB API credentials.');
-    }
-    if (response.status === 404) {
-      throw new Error('Vehicle not found. Please check the VIN and try again.');
-    }
-    if (response.status === 429) {
-      throw new Error('Too many requests. Please try again later.');
-    }
-    throw new Error('Failed to fetch vehicle data. Please try again later.');
+  // Validate VIN format
+  if (!isValidVin(vin)) {
+    throw new Error('Invalid VIN format. VIN must be 17 characters long and contain only letters (except I, O, Q) and numbers.');
   }
 
-  const data = await response.json();
+  // Simulate different API responses based on VIN
+  const lastChar = vin.charAt(vin.length - 1).toLowerCase();
   
-  // Validate required fields
-  if (!data.make || !data.model || !data.year || !data.estimatedValue) {
-    throw new Error('Incomplete vehicle data received from KBB API.');
+  // Simulate API errors occasionally
+  if (lastChar === 'x') {
+    throw new Error('Vehicle not found. Please check the VIN and try again.');
+  }
+  if (lastChar === 'z') {
+    throw new Error('API rate limit exceeded. Please try again later.');
   }
 
-  return data;
+  // Return a random mock vehicle, but consistently based on the VIN
+  const mockIndex = vin.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % mockVehicles.length;
+  return mockVehicles[mockIndex];
 }
