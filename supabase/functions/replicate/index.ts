@@ -4,8 +4,9 @@ import { corsHeaders } from "../_shared/cors.ts"
 const REPLICATE_API_URL = "https://api.replicate.com/v1/predictions"
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
