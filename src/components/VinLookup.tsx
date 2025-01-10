@@ -20,8 +20,8 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-16rem)] w-full">
-      <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md mx-auto px-4">
+    <div className="flex flex-col items-center justify-center w-full h-full">
+      <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
         <div className="space-y-3">
           <label htmlFor="vin" className="block text-sm sm:text-base font-medium text-center">
             Vehicle Identification Number (VIN)
@@ -40,12 +40,12 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         </div>
         
         {vinError && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mt-4">
             <AlertDescription>{vinError}</AlertDescription>
           </Alert>
         )}
 
-        <Button type="submit" className="w-full h-12 sm:h-10 text-base sm:text-sm">
+        <Button type="submit" className="w-full h-12 sm:h-10 text-base sm:text-sm mt-6">
           Get Value
         </Button>
       </form>
