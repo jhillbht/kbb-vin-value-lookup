@@ -1,123 +1,114 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, FileDown, Mail } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency } from "@/lib/utils";
 
-interface VehicleData {
-  make: string;
-  model: string;
-  year: number;
-  trim: string;
-  estimatedValue: number;
-  tradeInValue?: number;
-  retailValue?: number;
-  cpoValue?: number;
+interface VehicleInfoProps {
+  data: {
+    vin: string;
+    year: number;
+    make: string;
+    model: string;
+    trim: string;
+    mileage: number;
+    condition: string;
+    valuations: {
+      retail: number;
+      privateParty: number;
+      tradeIn: number;
+    };
+  };
 }
 
-export const VehicleInfo = ({ data }: { data: VehicleData }) => {
+export const VehicleInfo = ({ data }: VehicleInfoProps) => {
   const { toast } = useToast();
 
-  const handleCopyToClipboard = () => {
-    const text = `
-      ${data.year} ${data.make} ${data.model} ${data.trim}
-      Trade-in Value: $${data.tradeInValue?.toLocaleString() ?? data.estimatedValue.toLocaleString()}
-      Retail Value: $${data.retailValue?.toLocaleString() ?? (data.estimatedValue * 1.2).toLocaleString()}
-      ${data.cpoValue ? `CPO Value: $${data.cpoValue.toLocaleString()}` : ''}
-    `.trim();
-
-    navigator.clipboard.writeText(text);
-    toast({
-      description: "Vehicle information copied to clipboard",
-    });
+  const handleSavePDF = () => {
+    // PDF generation logic
   };
 
-  const handleSaveAsPDF = () => {
-    // For now, just show a toast since PDF generation would require additional setup
-    toast({
-      description: "PDF download started",
+  const handleNotifyTeam = () => {
+    const vehicleDetails = `${data.year} ${data.make} ${data.model} ${data.trim} (VIN: ${data.vin})`;
+    const recipients = [
+      { name: "Manager A", notified: false },
+      { name: "Manager B", notified: false },
+      { name: "Salesperson A", notified: false }
+    ];
+
+    // Simulate sending notifications
+    recipients.forEach(recipient => {
+      // In a real implementation, this would make API calls to your notification system
+      console.log(`Notifying ${recipient.name} about vehicle: ${vehicleDetails}`);
+      recipient.notified = true;
     });
-  };
 
-  const handleEmailValuation = () => {
-    // Open default email client with pre-filled subject
-    const subject = `Vehicle Valuation: ${data.year} ${data.make} ${data.model}`;
-    const body = `
-      Vehicle Details:
-      ${data.year} ${data.make} ${data.model} ${data.trim}
-      
-      Trade-in Value: $${data.tradeInValue?.toLocaleString() ?? data.estimatedValue.toLocaleString()}
-      Retail Value: $${data.retailValue?.toLocaleString() ?? (data.estimatedValue * 1.2).toLocaleString()}
-      ${data.cpoValue ? `CPO Value: $${data.cpoValue.toLocaleString()}` : ''}
-    `.trim();
-
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // Show success toast
+    toast({
+      title: "Team Notified",
+      description: "Vehicle details have been sent to the team members.",
+    });
   };
 
   return (
-    <Card className="p-4 sm:p-6 w-full max-w-md">
-      <div className="space-y-4 sm:space-y-6">
-        <div className="space-y-2">
-          <h2 className="text-xl sm:text-2xl font-bold">
-            {data.year} {data.make} {data.model}
-          </h2>
-          <p className="text-sm sm:text-base text-gray-500">{data.trim}</p>
-        </div>
-        
-        <div className="grid gap-3 sm:gap-4">
-          <div className="p-3 sm:p-4 rounded-lg bg-green-50">
-            <p className="text-sm font-medium text-green-800">Trade-in Value</p>
-            <p className="text-xl sm:text-2xl font-bold text-green-700">
-              ${data.tradeInValue?.toLocaleString() ?? data.estimatedValue.toLocaleString()}
-            </p>
-          </div>
-
-          <div className="p-3 sm:p-4 rounded-lg bg-blue-50">
-            <p className="text-sm font-medium text-blue-800">Retail Value</p>
-            <p className="text-xl sm:text-2xl font-bold text-blue-700">
-              ${data.retailValue?.toLocaleString() ?? (data.estimatedValue * 1.2).toLocaleString()}
-            </p>
-          </div>
-
-          {data.cpoValue && (
-            <div className="p-3 sm:p-4 rounded-lg bg-purple-50">
-              <p className="text-sm font-medium text-purple-800">Certified Pre-Owned Value</p>
-              <p className="text-xl sm:text-2xl font-bold text-purple-700">
-                ${data.cpoValue.toLocaleString()}
-              </p>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold">
+            {data.year} {data.make} {data.model} {data.trim}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">VIN</p>
+                <p className="font-mono">{data.vin}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Mileage</p>
+                <p>{data.mileage.toLocaleString()} miles</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Condition</p>
+                <p className="capitalize">{data.condition}</p>
+              </div>
             </div>
-          )}
-        </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
-          <Button
-            variant="outline"
-            size="lg"
-            className="flex-1 h-12 sm:h-10"
-            onClick={handleSaveAsPDF}
-          >
-            <FileDown className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-            Save PDF
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="flex-1 h-12 sm:h-10"
-            onClick={handleCopyToClipboard}
-          >
-            <Copy className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-            Copy
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="flex-1 h-12 sm:h-10"
-            onClick={handleEmailValuation}
-          >
-            <Mail className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-            Email
-          </Button>
-        </div>
-      </div>
-    </Card>
+            <div className="space-y-2">
+              <h3 className="font-semibold">Valuations</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="p-3 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Retail</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(data.valuations.retail)}
+                  </p>
+                </div>
+                <div className="p-3 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Private Party</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(data.valuations.privateParty)}
+                  </p>
+                </div>
+                <div className="p-3 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Trade-In</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(data.valuations.tradeIn)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 justify-end">
+              <Button onClick={handleSavePDF} variant="outline">
+                Save PDF
+              </Button>
+              <Button onClick={handleNotifyTeam}>
+                Notify Team
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
