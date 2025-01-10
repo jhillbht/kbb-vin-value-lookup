@@ -50,6 +50,17 @@ const isValidVin = (vin: string): boolean => {
 // Simulate network delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Helper function to get consistent mock data based on VIN
+const getMockIndexFromVin = (vin: string): number => {
+  // Use specific VINs for consistent data
+  if (vin === "1HGCM82633A123456") return 0; // Toyota Camry
+  if (vin === "5FNRL6H58NB123789") return 1; // Honda Civic
+  if (vin === "1FTEW1EG5NK987654") return 2; // Ford F-150
+  
+  // For other VINs, use the original hash method
+  return vin.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % mockVehicles.length;
+};
+
 export async function getVehicleValuation(vin: string): Promise<ValuationResponse> {
   // Simulate API delay (between 500ms and 1.5s)
   await delay(Math.random() * 1000 + 500);
@@ -70,7 +81,7 @@ export async function getVehicleValuation(vin: string): Promise<ValuationRespons
     throw new Error('API rate limit exceeded. Please try again later.');
   }
 
-  // Return a random mock vehicle, but consistently based on the VIN
-  const mockIndex = vin.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % mockVehicles.length;
+  // Return consistent mock data based on VIN
+  const mockIndex = getMockIndexFromVin(vin);
   return mockVehicles[mockIndex];
 }
