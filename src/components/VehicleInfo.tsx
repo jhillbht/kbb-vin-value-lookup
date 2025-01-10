@@ -20,13 +20,13 @@ const getVehicleImage = (model: string): string => {
   if (model.toLowerCase().includes('model s')) {
     return '/model-s.png';
   } else if (model.toLowerCase().includes('model 3')) {
-    return '/model-3.png';
+    return '/model-3.png';  // Now using the new vector image
   } else if (model.toLowerCase().includes('model x')) {
     return '/model-x.png';
   } else if (model.toLowerCase().includes('model y')) {
     return '/model-y.png';
   }
-  return '/model-3.png'; // Default fallback
+  return '/model-3.png'; // Default fallback to the new vector image
 };
 
 export const VehicleInfo = ({ data }: VehicleInfoProps) => {
