@@ -1,7 +1,9 @@
 import { toast } from "@/hooks/use-toast";
 
-const REPLICATE_API_URL = "/api/replicate/predictions";
 const REPLICATE_API_KEY = "r8_TgDOuItziSv8IOM9sQk6rLHMZGoPxyJ3hOXcO";
+const BASE_URL = import.meta.env.PROD 
+  ? "https://api.replicate.com/v1/predictions"
+  : "/api/replicate/predictions";
 
 export interface GenerationResponse {
   id: string;
@@ -17,7 +19,7 @@ export interface GenerationResponse {
 export const generateVehicleImage = async (prompt: string): Promise<GenerationResponse> => {
   try {
     console.log("Generating image with prompt:", prompt);
-    const response = await fetch(REPLICATE_API_URL, {
+    const response = await fetch(BASE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,11 +63,14 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
 export const checkGenerationStatus = async (
   url: string
 ): Promise<GenerationResponse> => {
-  const proxyUrl = url.replace('https://api.replicate.com/v1', '/api/replicate');
+  // In production, use the original URL, in development use the proxy
+  const checkUrl = import.meta.env.PROD 
+    ? url 
+    : url.replace('https://api.replicate.com/v1', '/api/replicate');
 
   try {
-    console.log("Checking generation status at URL:", proxyUrl);
-    const response = await fetch(proxyUrl, {
+    console.log("Checking generation status at URL:", checkUrl);
+    const response = await fetch(checkUrl, {
       headers: {
         "Authorization": `Token ${REPLICATE_API_KEY}`,
         "Content-Type": "application/json",
