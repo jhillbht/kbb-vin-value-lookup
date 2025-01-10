@@ -45,6 +45,16 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
     });
   };
 
+  const handleEmailOffer = () => {
+    // Simulate sending email
+    console.log(`Sending offer email for ${data.year} ${data.make} ${data.model}`);
+    
+    toast({
+      title: "Email Sent",
+      description: "The offer has been sent to the customer's email.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -91,6 +101,9 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
             <div className="flex gap-2 justify-end">
               <Button onClick={handleSavePDF} variant="outline">
                 Save PDF
+              </Button>
+              <Button onClick={handleEmailOffer} variant="outline">
+                Email Offer
               </Button>
               <Button onClick={handleNotifyTeam}>
                 Notify Team
