@@ -58,9 +58,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-7xl">
           <div className="text-center space-y-4 mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold gradient-text">
               Vehicle Value Lookup
