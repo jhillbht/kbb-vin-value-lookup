@@ -87,7 +87,11 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
           setIsGenerating(false);
           clearInterval(pollInterval);
         } else if (result.status === "failed") {
-          toast.error("Failed to generate image");
+          toast({
+            title: "Image Generation Failed",
+            description: "Failed to generate the vehicle image.",
+            variant: "destructive",
+          });
           setIsGenerating(false);
           clearInterval(pollInterval);
         }
@@ -96,7 +100,11 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
     } catch (error) {
       setIsGenerating(false);
       if (error instanceof Error) {
-        toast.error(error.message);
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
       }
     }
   };

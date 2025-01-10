@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 const REPLICATE_API_URL = "/api/replicate/predictions";
 
@@ -38,7 +38,11 @@ export const generateVehicleImage = async (prompt: string, apiKey: string): Prom
       const errorData = await response.json();
     
       if (response.status === 402) {
-        toast.error("Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.");
+        toast({
+          title: "Billing Required",
+          description: "Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.",
+          variant: "destructive",
+        });
         throw new Error("Billing setup required for Replicate API");
       }
     
@@ -51,9 +55,17 @@ export const generateVehicleImage = async (prompt: string, apiKey: string): Prom
   } catch (error) {
     console.error("Error generating image:", error);
     if (error instanceof Error) {
-      toast.error(error.message);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     } else {
-      toast.error("Failed to generate image");
+      toast({
+        title: "Error",
+        description: "Failed to generate image",
+        variant: "destructive",
+      });
     }
     throw error;
   }
