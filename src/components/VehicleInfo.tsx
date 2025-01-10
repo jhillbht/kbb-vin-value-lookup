@@ -3,8 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import { CarFront, Loader2 } from "lucide-react";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
 import { generateVehicleImage, checkGenerationStatus } from "@/lib/replicate";
 
 interface VehicleInfoProps {
@@ -18,13 +17,19 @@ interface VehicleInfoProps {
     retailValue: number;
     vin?: string;
   };
+  apiKey: string;
 }
 
-export const VehicleInfo = ({ data }: VehicleInfoProps) => {
+export const VehicleInfo = ({ data, apiKey }: VehicleInfoProps) => {
   const { toast } = useToast();
-  const [apiKey, setApiKey] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  useEffect(() => {
+    if (apiKey) {
+      generateImage();
+    }
+  }, [data, apiKey]);
 
   const handleSavePDF = () => {
     console.log(`Generating PDF for ${data.year} ${data.make} ${data.model}`);
@@ -152,30 +157,6 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
                   VIN: {data.vin}
                 </p>
               )}
-              <div className="mt-4 space-y-2">
-                <Input
-                  type="password"
-                  placeholder="Enter Replicate API Key"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  className="max-w-md"
-                />
-                <Button 
-                  onClick={generateImage}
-                  disabled={isGenerating}
-                  variant="outline"
-                  size="sm"
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    'Generate Image'
-                  )}
-                </Button>
-              </div>
             </div>
           </div>
         </CardHeader>

@@ -5,6 +5,7 @@ import { RecentLookups } from "@/components/RecentLookups";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getVehicleValuation } from "@/lib/kbb-api";
+import { Input } from "@/components/ui/input";
 
 interface RecentLookup {
   vin: string;
@@ -18,6 +19,7 @@ const Index = () => {
   const [vehicleData, setVehicleData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<RecentLookup[]>([]);
+  const [apiKey, setApiKey] = useState("");
 
   const addToRecentLookups = (vin: string, data: any) => {
     setRecentLookups((prev) => {
@@ -73,7 +75,16 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <div className="glass-card p-6 rounded-lg">
-                <VinLookup onSubmit={handleVinSubmit} />
+                <div className="space-y-4">
+                  <Input
+                    type="password"
+                    placeholder="Enter Replicate API Key"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="max-w-md"
+                  />
+                  <VinLookup onSubmit={handleVinSubmit} />
+                </div>
               </div>
               
               {error && (
@@ -91,7 +102,7 @@ const Index = () => {
               
               {!loading && vehicleData && (
                 <div className="glass-card rounded-lg">
-                  <VehicleInfo data={vehicleData} />
+                  <VehicleInfo data={vehicleData} apiKey={apiKey} />
                 </div>
               )}
             </div>
