@@ -16,6 +16,19 @@ interface VehicleInfoProps {
   };
 }
 
+const getVehicleImage = (model: string): string => {
+  if (model.toLowerCase().includes('model s')) {
+    return '/model-s.png';
+  } else if (model.toLowerCase().includes('model 3')) {
+    return '/model-3.png';
+  } else if (model.toLowerCase().includes('model x')) {
+    return '/model-x.png';
+  } else if (model.toLowerCase().includes('model y')) {
+    return '/model-y.png';
+  }
+  return '/model-3.png'; // Default fallback
+};
+
 export const VehicleInfo = ({ data }: VehicleInfoProps) => {
   const { toast } = useToast();
 
@@ -56,23 +69,12 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
       <Card className="bg-secondary/50 backdrop-blur-sm border-0">
         <CardHeader>
           <div className="flex items-center gap-4">
-            <div className="w-24 h-16 bg-muted rounded-lg flex items-center justify-center">
-              <svg
-                className="w-16 h-16 text-muted-foreground"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M7 17L7 19" strokeLinecap="round" />
-                <path d="M17 17L17 19" strokeLinecap="round" />
-                <path d="M3 17H21" />
-                <path d="M6 11H8" strokeLinecap="round" />
-                <path d="M16 11H18" strokeLinecap="round" />
-                <path d="M3.5 11C3.5 6.5 4.5 6 6.5 6H17.5C19.5 6 20.5 6.5 20.5 11" />
-                <path d="M3 17L5 11" />
-                <path d="M21 17L19 11" />
-              </svg>
+            <div className="w-48 h-32 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+              <img
+                src={getVehicleImage(data.model)}
+                alt={`${data.year} ${data.make} ${data.model}`}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex-1">
               <CardTitle className="text-xl font-semibold mb-1">
