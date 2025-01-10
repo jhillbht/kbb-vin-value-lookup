@@ -39,7 +39,13 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
     
     if (!response.ok) {
       if (response.status === 402) {
-        throw new Error("Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.");
+        const errorMessage = "Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.";
+        toast({
+          title: "Billing Required",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        throw new Error(errorMessage);
       }
       throw new Error(data.detail || "Failed to generate image");
     }
