@@ -5,18 +5,14 @@ import { formatCurrency } from "@/lib/utils";
 
 interface VehicleInfoProps {
   data: {
-    vin: string;
-    year: number;
     make: string;
     model: string;
+    year: number;
     trim: string;
-    mileage: number;
-    condition: string;
-    valuations: {
-      retail: number;
-      privateParty: number;
-      tradeIn: number;
-    };
+    estimatedValue: number;
+    tradeInValue: number;
+    retailValue: number;
+    vin?: string;
   };
 }
 
@@ -28,7 +24,7 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
   };
 
   const handleNotifyTeam = () => {
-    const vehicleDetails = `${data.year} ${data.make} ${data.model} ${data.trim} (VIN: ${data.vin})`;
+    const vehicleDetails = `${data.year} ${data.make} ${data.model} ${data.trim}`;
     const recipients = [
       { name: "Manager A", notified: false },
       { name: "Manager B", notified: false },
@@ -59,20 +55,14 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">VIN</p>
-                <p className="font-mono">{data.vin}</p>
+            {data.vin && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">VIN</p>
+                  <p className="font-mono">{data.vin}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Mileage</p>
-                <p>{data.mileage.toLocaleString()} miles</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Condition</p>
-                <p className="capitalize">{data.condition}</p>
-              </div>
-            </div>
+            )}
 
             <div className="space-y-2">
               <h3 className="font-semibold">Valuations</h3>
@@ -80,19 +70,19 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-sm text-muted-foreground">Retail</p>
                   <p className="text-lg font-semibold">
-                    {formatCurrency(data.valuations.retail)}
+                    {formatCurrency(data.retailValue)}
                   </p>
                 </div>
                 <div className="p-3 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">Private Party</p>
+                  <p className="text-sm text-muted-foreground">Estimated</p>
                   <p className="text-lg font-semibold">
-                    {formatCurrency(data.valuations.privateParty)}
+                    {formatCurrency(data.estimatedValue)}
                   </p>
                 </div>
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-sm text-muted-foreground">Trade-In</p>
                   <p className="text-lg font-semibold">
-                    {formatCurrency(data.valuations.tradeIn)}
+                    {formatCurrency(data.tradeInValue)}
                   </p>
                 </div>
               </div>
