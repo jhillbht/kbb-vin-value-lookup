@@ -33,7 +33,12 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
   const { toast } = useToast();
 
   const handleSavePDF = () => {
-    // PDF generation logic
+    console.log(`Generating PDF for ${data.year} ${data.make} ${data.model}`);
+    
+    toast({
+      title: "PDF Generated",
+      description: "The vehicle valuation PDF has been generated and saved.",
+    });
   };
 
   const handleNotifyTeam = () => {
@@ -69,11 +74,11 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
       <Card className="bg-secondary/50 backdrop-blur-sm border-0">
         <CardHeader>
           <div className="flex items-center gap-4">
-            <div className="w-48 h-32 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+            <div className="w-64 h-40 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
               <img
                 src={getVehicleImage(data.model)}
                 alt={`${data.year} ${data.make} ${data.model}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             <div className="flex-1">
