@@ -1,7 +1,5 @@
 import { toast } from "@/hooks/use-toast";
 
-const REPLICATE_API_KEY = "r8_TgDOuItziSv8IOM9sQk6rLHMZGoPxyJ3hOXcO";
-
 // Always use the proxy URL to handle CORS in both environments
 const BASE_URL = "/api/replicate/predictions";
 

@@ -17,9 +17,10 @@ interface VehicleInfoProps {
     retailValue: number;
     vin?: string;
   };
+  apiKey: string;
 }
 
-export const VehicleInfo = ({ data }: VehicleInfoProps) => {
+export const VehicleInfo = ({ data, apiKey }: VehicleInfoProps) => {
   const { toast } = useToast();
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -69,12 +70,12 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
     setIsGenerating(true);
     try {
       const prompt = `${data.year} ${data.make} ${data.model} ${data.trim}`;
-      const response = await generateVehicleImage(prompt);
+      const response = await generateVehicleImage(prompt, apiKey);
       
       // Poll for results
       const pollInterval = setInterval(async () => {
         try {
-          const result = await checkGenerationStatus(response.urls.get);
+          const result = await checkGenerationStatus(response.urls.get, apiKey);
           
           if (result.status === "succeeded" && result.output) {
             setGeneratedImage(result.output[0]);
