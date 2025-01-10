@@ -28,10 +28,7 @@ const Index = () => {
         year: data.year,
       };
       
-      // Remove duplicate if exists
       const filtered = prev.filter((lookup) => lookup.vin !== vin);
-      
-      // Add new lookup to the beginning and keep only last 5
       return [newLookup, ...filtered].slice(0, 5);
     });
   };
@@ -61,47 +58,51 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-4 sm:py-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-2 mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              KBB Valuation Lookup
+          <div className="text-center space-y-4 mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold gradient-text">
+              Vehicle Value Lookup
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-muted-foreground">
               Enter a VIN to get the latest Kelley Blue Book valuation
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
-            <div className="lg:col-span-2 space-y-4 sm:space-y-8">
-              <VinLookup onSubmit={handleVinSubmit} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="glass-card p-6 rounded-lg">
+                <VinLookup onSubmit={handleVinSubmit} />
+              </div>
               
               {error && (
-                <Alert variant="destructive" className="w-full max-w-md mx-auto">
+                <Alert variant="destructive" className="glass-card border-destructive/20">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
               
               {loading && (
-                <div className="flex flex-col items-center justify-center space-y-4">
+                <div className="flex flex-col items-center justify-center p-12 glass-card rounded-lg space-y-4">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-gray-600">Fetching KBB valuation...</p>
+                  <p className="text-muted-foreground">Fetching valuation data...</p>
                 </div>
               )}
               
               {!loading && vehicleData && (
-                <div className="flex justify-center">
+                <div className="glass-card rounded-lg">
                   <VehicleInfo data={vehicleData} />
                 </div>
               )}
             </div>
 
             <div className="lg:col-span-1">
-              <RecentLookups
-                lookups={recentLookups}
-                onLookupClick={handleVinSubmit}
-              />
+              <div className="glass-card rounded-lg">
+                <RecentLookups
+                  lookups={recentLookups}
+                  onLookupClick={handleVinSubmit}
+                />
+              </div>
             </div>
           </div>
         </div>
