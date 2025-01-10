@@ -34,39 +34,19 @@ export const generateVehicleImage = async (prompt: string, apiKey: string): Prom
       }),
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      const errorData = await response.json();
-    
       if (response.status === 402) {
-        toast({
-          title: "Billing Required",
-          description: "Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.",
-          variant: "destructive",
-        });
-        throw new Error("Billing setup required for Replicate API");
+        throw new Error("Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.");
       }
-    
-      throw new Error(errorData.detail || "Failed to generate image");
+      throw new Error(data.detail || "Failed to generate image");
     }
 
-    const data = await response.json();
     console.log("Generation response:", data);
     return data;
   } catch (error) {
     console.error("Error generating image:", error);
-    if (error instanceof Error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to generate image",
-        variant: "destructive",
-      });
-    }
     throw error;
   }
 };

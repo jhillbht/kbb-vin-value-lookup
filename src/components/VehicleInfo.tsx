@@ -80,20 +80,32 @@ export const VehicleInfo = ({ data }: VehicleInfoProps) => {
       
       // Poll for results
       const pollInterval = setInterval(async () => {
-        const result = await checkGenerationStatus(response.urls.get, apiKey);
-        
-        if (result.status === "succeeded" && result.output) {
-          setGeneratedImage(result.output[0]);
-          setIsGenerating(false);
+        try {
+          const result = await checkGenerationStatus(response.urls.get, apiKey);
+          
+          if (result.status === "succeeded" && result.output) {
+            setGeneratedImage(result.output[0]);
+            setIsGenerating(false);
+            clearInterval(pollInterval);
+          } else if (result.status === "failed") {
+            toast({
+              title: "Image Generation Failed",
+              description: "Failed to generate the vehicle image.",
+              variant: "destructive",
+            });
+            setIsGenerating(false);
+            clearInterval(pollInterval);
+          }
+        } catch (error) {
           clearInterval(pollInterval);
-        } else if (result.status === "failed") {
-          toast({
-            title: "Image Generation Failed",
-            description: "Failed to generate the vehicle image.",
-            variant: "destructive",
-          });
           setIsGenerating(false);
-          clearInterval(pollInterval);
+          if (error instanceof Error) {
+            toast({
+              title: "Error",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
         }
       }, 1000);
       
