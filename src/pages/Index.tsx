@@ -2,7 +2,6 @@ import { useState } from "react";
 import { VinLookup } from "@/components/VinLookup";
 import { VehicleInfo } from "@/components/VehicleInfo";
 import { RecentLookups } from "@/components/RecentLookups";
-import { ApiKeyInput } from "@/components/ApiKeyInput";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getVehicleValuation } from "@/lib/kbb-api";
@@ -19,7 +18,6 @@ const Index = () => {
   const [vehicleData, setVehicleData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [recentLookups, setRecentLookups] = useState<RecentLookup[]>([]);
-  const [apiKey, setApiKey] = useState<string | null>(null);
 
   const addToRecentLookups = (vin: string, data: any) => {
     setRecentLookups((prev) => {
@@ -59,14 +57,6 @@ const Index = () => {
     }
   };
 
-  if (!apiKey) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <ApiKeyInput onSubmit={setApiKey} />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -101,7 +91,7 @@ const Index = () => {
               
               {!loading && vehicleData && (
                 <div className="glass-card rounded-lg">
-                  <VehicleInfo data={vehicleData} apiKey={apiKey} />
+                  <VehicleInfo data={vehicleData} />
                 </div>
               )}
             </div>
