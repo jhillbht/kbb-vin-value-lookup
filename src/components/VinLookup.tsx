@@ -20,33 +20,35 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto">
-      <div className="space-y-2">
-        <label htmlFor="vin" className="text-sm sm:text-base font-medium text-gray-700">
-          Vehicle Identification Number (VIN)
-        </label>
-        <Input
-          id="vin"
-          placeholder="Enter 17-character VIN"
-          value={vin}
-          onChange={(e) => {
-            setVin(e.target.value.toUpperCase());
-            setVinError(null);
-          }}
-          className="font-mono h-12 sm:h-10 text-base sm:text-sm"
-          maxLength={17}
-        />
-      </div>
-      
-      {vinError && (
-        <Alert variant="destructive">
-          <AlertDescription>{vinError}</AlertDescription>
-        </Alert>
-      )}
+    <div className="flex items-center justify-center min-h-[200px] w-full">
+      <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto px-4">
+        <div className="space-y-2">
+          <label htmlFor="vin" className="block text-sm sm:text-base font-medium">
+            Vehicle Identification Number (VIN)
+          </label>
+          <Input
+            id="vin"
+            placeholder="Enter 17-character VIN"
+            value={vin}
+            onChange={(e) => {
+              setVin(e.target.value.toUpperCase());
+              setVinError(null);
+            }}
+            className="font-mono h-12 sm:h-10 text-base sm:text-sm"
+            maxLength={17}
+          />
+        </div>
+        
+        {vinError && (
+          <Alert variant="destructive">
+            <AlertDescription>{vinError}</AlertDescription>
+          </Alert>
+        )}
 
-      <Button type="submit" className="w-full h-12 sm:h-10 text-base sm:text-sm">
-        Get Value
-      </Button>
-    </form>
+        <Button type="submit" className="w-full h-12 sm:h-10 text-base sm:text-sm">
+          Get Value
+        </Button>
+      </form>
+    </div>
   );
 };
