@@ -19,8 +19,9 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
     isStarted,
     stop,
     start,
-    error: scannerError
+    error: scannerError,
   } = useZxing({
+    paused: false,
     onDecodeResult(result) {
       const scannedText = result.getText().toUpperCase();
       if (/^[A-HJ-NPR-Z0-9]{17}$/.test(scannedText)) {
@@ -36,7 +37,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
     },
     constraints: {
       video: {
-        facingMode: { exact: "environment" },
+        facingMode: "environment",
         width: { ideal: 1280 },
         height: { ideal: 720 },
         aspectRatio: 16/9
@@ -45,15 +46,12 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
   });
 
   useEffect(() => {
-    if (!isStarted) {
-      start();
-    }
     return () => {
       if (isStarted) {
         stop();
       }
     };
-  }, [isStarted, start, stop]);
+  }, [isStarted, stop]);
 
   return (
     <DialogContent className="sm:max-w-md">
