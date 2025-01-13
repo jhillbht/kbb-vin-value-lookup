@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Camera } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { VinScanner } from "./VinScanner";
+import { ScanButton } from "./vin/ScanButton";
+import { VinInputForm } from "./vin/VinInputForm";
 
 interface VinLookupProps {
   onSubmit: (vin: string) => void;
@@ -57,6 +55,11 @@ export const VinLookup = ({ onSubmit }: VinLookupProps) => {
     setIsScannerOpen(false);
   };
 
+  const handleVinChange = (value: string) => {
+    setVin(value);
+    setVinError(null);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setVinError(null);
@@ -71,48 +74,14 @@ export const VinLookup = ({ onSubmit }: VinLookupProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      <Button
-        type="button"
-        variant="outline"
-        size="lg"
-        className="mb-8 w-full max-w-[200px] bg-secondary/50 hover:bg-secondary/70 transition-all duration-300"
-        onClick={handleScanClick}
-      >
-        <Camera className="mr-2 h-5 w-5" />
-        Scan VIN
-      </Button>
-
-      <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-        <div className="space-y-4">
-          <label htmlFor="vin" className="block text-lg font-medium text-center text-slate-300">
-            Vehicle Identification Number (VIN)
-          </label>
-          <Input
-            id="vin"
-            placeholder="Enter 17-character VIN"
-            value={vin}
-            onChange={(e) => {
-              setVin(e.target.value.toUpperCase());
-              setVinError(null);
-            }}
-            className="font-mono h-12 text-lg text-center bg-secondary/50 border-white/10 focus:border-primary/50 focus:ring-primary/50 placeholder:text-slate-500"
-            maxLength={17}
-          />
-        </div>
-        
-        {vinError && (
-          <Alert variant="destructive" className="mt-4 bg-destructive/10 border-destructive/20">
-            <AlertDescription className="text-destructive-foreground">{vinError}</AlertDescription>
-          </Alert>
-        )}
-
-        <Button 
-          type="submit" 
-          className="w-full h-12 text-lg mt-8 bg-primary hover:bg-primary/90 transition-all duration-300"
-        >
-          Get Value
-        </Button>
-      </form>
+      <ScanButton onClick={handleScanClick} />
+      
+      <VinInputForm
+        vin={vin}
+        onVinChange={handleVinChange}
+        onSubmit={handleSubmit}
+        error={vinError}
+      />
 
       <Dialog 
         open={isScannerOpen} 
