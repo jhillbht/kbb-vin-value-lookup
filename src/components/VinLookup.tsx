@@ -1,26 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Camera } from "lucide-react";
+import { Camera, AlertCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useZxing } from "react-zxing";
+import { useToast } from "@/components/ui/use-toast";
 
 export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => {
   const [vin, setVin] = useState("");
   const [vinError, setVinError] = useState<string | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const { toast } = useToast();
 
-  const { ref } = useZxing({
+  const {
+    ref,
+    torch,
+    isStarted,
+    stop,
+    start,
+    error: scannerError
+  } = useZxing({
     onDecodeResult(result) {
-      const scannedVin = result.getText();
-      setVin(scannedVin.toUpperCase());
-      setIsScannerOpen(false);
+      const scannedText = result.getText().toUpperCase();
+      // Check if the scanned text matches VIN format
+      if (/^[A-HJ-NPR-Z0-9]{17}$/.test(scannedText)) {
+        setVin(scannedText);
+        setIsScannerOpen(false);
+        toast({
+          title: "VIN Scanned Successfully",
+          description: "The VIN has been captured and populated in the form.",
+        });
+      }
     },
     onError(error) {
       console.error("Scanner error:", error);
     },
+    constraints: {
+      facingMode: "environment"
+    },
   });
+
+  useEffect(() => {
+    const checkCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+        stream.getTracks().forEach(track => track.stop());
+      } catch (err) {
+        setHasCameraPermission(false);
+        console.error("Camera permission error:", err);
+      }
+    };
+
+    if (isScannerOpen) {
+      checkCameraPermission();
+    }
+  }, [isScannerOpen]);
+
+  const handleScanClick = async () => {
+    setIsScannerOpen(true);
+    if (hasCameraPermission === false) {
+      toast({
+        variant: "destructive",
+        title: "Camera Access Required",
+        description: "Please enable camera access in your browser settings to scan VIN codes.",
+      });
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +89,7 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         variant="outline"
         size="lg"
         className="mb-6 w-full max-w-[200px]"
-        onClick={() => setIsScannerOpen(true)}
+        onClick={handleScanClick}
       >
         <Camera className="mr-2 h-5 w-5" />
         Scan VIN
@@ -76,14 +124,28 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         </Button>
       </form>
 
-      <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
+      <Dialog open={isScannerOpen} onOpenChange={(open) => {
+        setIsScannerOpen(open);
+        if (!open && isStarted) {
+          stop();
+        }
+      }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Scan VIN Barcode</DialogTitle>
           </DialogHeader>
-          <div className="aspect-video w-full overflow-hidden rounded-lg">
-            <video ref={ref} className="w-full h-full object-cover" />
-          </div>
+          {hasCameraPermission === false ? (
+            <div className="p-4 text-center">
+              <AlertCircle className="mx-auto h-8 w-8 text-destructive mb-2" />
+              <p className="text-sm text-muted-foreground">
+                Camera access is required to scan VIN codes. Please enable it in your browser settings.
+              </p>
+            </div>
+          ) : (
+            <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
+              <video ref={ref} className="w-full h-full object-cover" />
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
