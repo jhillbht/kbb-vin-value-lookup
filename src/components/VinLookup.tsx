@@ -2,49 +2,21 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Camera, AlertCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useZxing } from "react-zxing";
+import { Camera } from "lucide-react";
+import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { VinScanner } from "./VinScanner";
 
-export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => {
+interface VinLookupProps {
+  onSubmit: (vin: string) => void;
+}
+
+export const VinLookup = ({ onSubmit }: VinLookupProps) => {
   const [vin, setVin] = useState("");
   const [vinError, setVinError] = useState<string | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const { toast } = useToast();
-
-  const {
-    ref,
-    torch,
-    isStarted,
-    stop,
-    start,
-    error: scannerError
-  } = useZxing({
-    onDecodeResult(result) {
-      const scannedText = result.getText().toUpperCase();
-      if (/^[A-HJ-NPR-Z0-9]{17}$/.test(scannedText)) {
-        setVin(scannedText);
-        setIsScannerOpen(false);
-        toast({
-          title: "VIN Scanned Successfully",
-          description: "The VIN has been captured and populated in the form.",
-        });
-      }
-    },
-    onError(error) {
-      console.error("Scanner error:", error);
-    },
-    constraints: {
-      video: {
-        facingMode: "environment",
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-        aspectRatio: 16/9
-      }
-    },
-  });
 
   useEffect(() => {
     const checkCameraPermission = async () => {
@@ -66,21 +38,8 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
 
     if (isScannerOpen) {
       checkCameraPermission();
-      if (!isStarted) {
-        start();
-      }
-    } else {
-      if (isStarted) {
-        stop();
-      }
     }
-
-    return () => {
-      if (isStarted) {
-        stop();
-      }
-    };
-  }, [isScannerOpen, isStarted, start, stop]);
+  }, [isScannerOpen]);
 
   const handleScanClick = async () => {
     setIsScannerOpen(true);
@@ -91,6 +50,11 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         description: "Please enable camera access in your browser settings to scan VIN codes.",
       });
     }
+  };
+
+  const handleScan = (scannedVin: string) => {
+    setVin(scannedVin);
+    setIsScannerOpen(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -147,35 +111,15 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
         </Button>
       </form>
 
-      <Dialog open={isScannerOpen} onOpenChange={(open) => {
-        setIsScannerOpen(open);
-        if (!open && isStarted) {
-          stop();
-        }
-      }}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Scan VIN Barcode</DialogTitle>
-          </DialogHeader>
-          {hasCameraPermission === false ? (
-            <div className="p-4 text-center">
-              <AlertCircle className="mx-auto h-8 w-8 text-destructive mb-2" />
-              <p className="text-sm text-muted-foreground">
-                Camera access is required to scan VIN codes. Please enable it in your browser settings.
-              </p>
-            </div>
-          ) : (
-            <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-              <video 
-                ref={ref} 
-                className="absolute inset-0 h-full w-full object-cover"
-                autoPlay
-                playsInline
-                muted
-              />
-            </div>
-          )}
-        </DialogContent>
+      <Dialog 
+        open={isScannerOpen} 
+        onOpenChange={(open) => setIsScannerOpen(open)}
+      >
+        <VinScanner
+          onScan={handleScan}
+          onClose={() => setIsScannerOpen(false)}
+          hasCameraPermission={hasCameraPermission}
+        />
       </Dialog>
     </div>
   );
