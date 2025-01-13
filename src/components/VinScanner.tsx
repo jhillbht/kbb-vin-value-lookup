@@ -19,9 +19,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
   const {
     ref,
     torch,
-    isStarted,
-    stop,
-    start,
+    paused,
     error: scannerError,
   } = useZxing({
     paused: false,
@@ -54,8 +52,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
         width: { ideal: 1280 },
         height: { ideal: 720 },
         aspectRatio: 16/9,
-        focusMode: "continuous",
-        // Enhanced camera settings for better scanning
+        // Remove focusMode as it's not a valid constraint
         zoom: 1.0,
         brightness: 1.0,
         contrast: 1.0
@@ -65,20 +62,20 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
 
   // Start camera immediately when component mounts
   useEffect(() => {
-    if (hasCameraPermission) {
-      start();
-    }
+    // Camera will start automatically since paused is false
     return () => {
-      if (isStarted) {
-        stop();
-      }
+      // Cleanup handled by useZxing
     };
-  }, [hasCameraPermission, isStarted, stop, start]);
+  }, [hasCameraPermission]);
 
   // Handle torch toggling
   const toggleTorch = async () => {
     try {
-      await torch?.toggle();
+      if (torch?.isOn) {
+        await torch.off();
+      } else {
+        await torch?.on();
+      }
       setTorchOn(!torchOn);
     } catch (error) {
       toast({
@@ -91,13 +88,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
 
   // Handle camera switching
   const toggleCamera = () => {
-    if (isStarted) {
-      stop();
-    }
     setUseFrontCamera(!useFrontCamera);
-    setTimeout(() => {
-      start();
-    }, 100);
   };
 
   return (
@@ -159,7 +150,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
               <Camera className="h-6 w-6" />
             </Button>
 
-            {torch && (
+            {torch?.isAvailable && (
               <Button
                 variant="secondary"
                 size="icon"
