@@ -37,10 +37,12 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
       console.error("Scanner error:", error);
     },
     constraints: {
-      facingMode: "environment",
-      aspectRatio: 16/9,
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
+      video: {
+        facingMode: "environment",
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        aspectRatio: 16/9
+      }
     },
   });
 
