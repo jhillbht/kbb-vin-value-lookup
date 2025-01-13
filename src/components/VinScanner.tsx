@@ -36,7 +36,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
     },
     constraints: {
       video: {
-        facingMode: "environment",
+        facingMode: { exact: "environment" },
         width: { ideal: 1280 },
         height: { ideal: 720 },
         aspectRatio: 16/9
