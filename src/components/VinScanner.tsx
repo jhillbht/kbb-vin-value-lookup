@@ -43,7 +43,7 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
         aspectRatio: 16/9
       }
     },
-  });
+  } as const);
 
   useEffect(() => {
     return () => {
