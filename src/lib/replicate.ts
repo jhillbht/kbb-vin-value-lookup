@@ -1,4 +1,4 @@
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface GenerationResponse {
@@ -29,6 +29,7 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
     });
 
     if (error) {
+      console.error("Error from Supabase function:", error);
       if (error.message.includes("402")) {
         const errorMessage = "Billing setup required for Replicate API. Please visit https://replicate.com/account/billing to set up billing.";
         toast({
@@ -65,6 +66,7 @@ export const checkGenerationStatus = async (url: string): Promise<GenerationResp
     });
 
     if (error) {
+      console.error("Error from Supabase function:", error);
       throw error;
     }
 
