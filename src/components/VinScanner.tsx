@@ -49,7 +49,8 @@ export const VinScanner = ({ onScan, onClose, hasCameraPermission }: VinScannerP
         height: { ideal: 720 },
         aspectRatio: 16/9,
       }
-    }
+    },
+    paused: !hasCameraPermission
   });
 
   const handleToggleTorch = async () => {
