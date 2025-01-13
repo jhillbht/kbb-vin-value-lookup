@@ -75,16 +75,16 @@ export const VinLookup = ({ onSubmit }: VinLookupProps) => {
         type="button"
         variant="outline"
         size="lg"
-        className="mb-6 w-full max-w-[200px]"
+        className="mb-8 w-full max-w-[200px] bg-secondary/50 hover:bg-secondary/70 transition-all duration-300"
         onClick={handleScanClick}
       >
         <Camera className="mr-2 h-5 w-5" />
         Scan VIN
       </Button>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
-        <div className="space-y-3">
-          <label htmlFor="vin" className="block text-sm sm:text-base font-medium text-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
+        <div className="space-y-4">
+          <label htmlFor="vin" className="block text-lg font-medium text-center text-slate-300">
             Vehicle Identification Number (VIN)
           </label>
           <Input
@@ -95,18 +95,21 @@ export const VinLookup = ({ onSubmit }: VinLookupProps) => {
               setVin(e.target.value.toUpperCase());
               setVinError(null);
             }}
-            className="font-mono h-12 sm:h-10 text-base sm:text-sm text-center"
+            className="font-mono h-12 text-lg text-center bg-secondary/50 border-white/10 focus:border-primary/50 focus:ring-primary/50 placeholder:text-slate-500"
             maxLength={17}
           />
         </div>
         
         {vinError && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertDescription>{vinError}</AlertDescription>
+          <Alert variant="destructive" className="mt-4 bg-destructive/10 border-destructive/20">
+            <AlertDescription className="text-destructive-foreground">{vinError}</AlertDescription>
           </Alert>
         )}
 
-        <Button type="submit" className="w-full h-12 sm:h-10 text-base sm:text-sm mt-6">
+        <Button 
+          type="submit" 
+          className="w-full h-12 text-lg mt-8 bg-primary hover:bg-primary/90 transition-all duration-300"
+        >
           Get Value
         </Button>
       </form>

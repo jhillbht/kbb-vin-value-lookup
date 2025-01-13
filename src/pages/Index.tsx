@@ -58,48 +58,50 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-xl">
-          <div className="text-center space-y-4 mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold gradient-text">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+      <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-2xl">
+          <div className="text-center space-y-4 mb-12">
+            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Vehicle Value Lookup
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-lg text-slate-300">
               Enter a VIN to get the latest Kelley Blue Book valuation
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="glass-card p-6 rounded-lg">
+          <div className="space-y-8">
+            <div className="bg-secondary/30 backdrop-blur-sm p-8 rounded-2xl border border-white/10 shadow-xl">
               <VinLookup onSubmit={handleVinSubmit} />
             </div>
             
             {error && (
-              <Alert variant="destructive" className="glass-card border-destructive/20">
-                <AlertDescription>{error}</AlertDescription>
+              <Alert variant="destructive" className="border-destructive/20 bg-destructive/10 backdrop-blur-sm">
+                <AlertDescription className="text-destructive-foreground">{error}</AlertDescription>
               </Alert>
             )}
             
             {loading && (
-              <div className="flex flex-col items-center justify-center p-12 glass-card rounded-lg space-y-4">
+              <div className="flex flex-col items-center justify-center p-12 bg-secondary/30 backdrop-blur-sm rounded-2xl border border-white/10 space-y-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-muted-foreground">Fetching valuation data...</p>
+                <p className="text-slate-300">Fetching valuation data...</p>
               </div>
             )}
             
             {!loading && vehicleData && (
-              <div className="glass-card rounded-lg">
+              <div className="bg-secondary/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-xl overflow-hidden">
                 <VehicleInfo data={vehicleData} />
               </div>
             )}
 
-            <div className="glass-card rounded-lg">
-              <RecentLookups
-                lookups={recentLookups}
-                onLookupClick={handleVinSubmit}
-              />
-            </div>
+            {recentLookups.length > 0 && (
+              <div className="bg-secondary/30 backdrop-blur-sm rounded-2xl border border-white/10 shadow-xl overflow-hidden">
+                <RecentLookups
+                  lookups={recentLookups}
+                  onLookupClick={handleVinSubmit}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
