@@ -24,7 +24,6 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
   } = useZxing({
     onDecodeResult(result) {
       const scannedText = result.getText().toUpperCase();
-      // Check if the scanned text matches VIN format
       if (/^[A-HJ-NPR-Z0-9]{17}$/.test(scannedText)) {
         setVin(scannedText);
         setIsScannerOpen(false);
@@ -38,14 +37,23 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
       console.error("Scanner error:", error);
     },
     constraints: {
-      facingMode: "environment"
+      facingMode: "environment",
+      aspectRatio: 16/9,
+      width: { ideal: 1280 },
+      height: { ideal: 720 }
     },
   });
 
   useEffect(() => {
     const checkCameraPermission = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          video: {
+            facingMode: "environment",
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          } 
+        });
         setHasCameraPermission(true);
         stream.getTracks().forEach(track => track.stop());
       } catch (err) {
@@ -56,8 +64,21 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
 
     if (isScannerOpen) {
       checkCameraPermission();
+      if (!isStarted) {
+        start();
+      }
+    } else {
+      if (isStarted) {
+        stop();
+      }
     }
-  }, [isScannerOpen]);
+
+    return () => {
+      if (isStarted) {
+        stop();
+      }
+    };
+  }, [isScannerOpen, isStarted, start, stop]);
 
   const handleScanClick = async () => {
     setIsScannerOpen(true);
@@ -142,8 +163,14 @@ export const VinLookup = ({ onSubmit }: { onSubmit: (vin: string) => void }) => 
               </p>
             </div>
           ) : (
-            <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
-              <video ref={ref} className="w-full h-full object-cover" />
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+              <video 
+                ref={ref} 
+                className="absolute inset-0 h-full w-full object-cover"
+                autoPlay
+                playsInline
+                muted
+              />
             </div>
           )}
         </DialogContent>
