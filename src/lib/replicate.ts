@@ -53,7 +53,9 @@ export const generateVehicleImage = async (prompt: string): Promise<GenerationRe
 export const checkGenerationStatus = async (url: string): Promise<GenerationResponse> => {
   try {
     console.log("Checking generation status at URL:", url);
-    const predictionId = url.split('/').pop();
+    // Remove any trailing colons from the URL
+    const cleanUrl = url.replace(/:\/?$/, '');
+    const predictionId = cleanUrl.split('/').pop();
     
     if (!predictionId) {
       throw new Error("Invalid prediction URL");
