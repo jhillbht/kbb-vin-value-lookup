@@ -3,18 +3,17 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
     proxy: {
-      '/api/replicate': {
-        target: 'https://api.replicate.com/v1',
+      '/functions/v1': {
+        target: 'https://ccsqfaobfzngvmhpnogi.supabase.co',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/replicate/, ''),
+        rewrite: (path) => path,
         headers: {
-          'Origin': 'https://api.replicate.com',
+          'Origin': 'https://ccsqfaobfzngvmhpnogi.supabase.co',
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
